@@ -21508,19 +21508,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Home = function Home() {
     return _react2.default.createElement(
-        "div",
+        'div',
         null,
         _react2.default.createElement(
-            "h1",
-            null,
-            "This is the very very best home component"
+            'h1',
+            { style: { color: 'blue' } },
+            'This is the very very best home component'
         ),
         _react2.default.createElement(
-            "button",
+            'button',
             { onClick: function onClick() {
-                    console.log("Hi there");
+                    console.log("Hi there again");
                 } },
-            "Press Me"
+            'Press Me'
         )
     );
 };
