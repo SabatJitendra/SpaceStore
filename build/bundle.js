@@ -488,12 +488,18 @@ var DashboardFooter = function (_React$Component) {
         key: 'render',
         value: function render() {
             var dashBoardFooter = {
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: '10px'
             };
             return _react2.default.createElement(
                 'div',
                 { className: 'dashboard-footer', style: dashBoardFooter },
-                'Developed By: Jitendra Sabat'
+                _react2.default.createElement(
+                    'span',
+                    { style: { fontWeight: 'bold' } },
+                    'Developed By:'
+                ),
+                ' Jitendra Sabat'
             );
         }
     }]);
