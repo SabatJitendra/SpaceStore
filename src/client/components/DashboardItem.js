@@ -30,7 +30,7 @@ class DashboardItem extends React.Component{
             color: '#6b2b96',
             fontSize: '13px'
         };
-        const {mission_name,flight_number,mission_id,launch_year,launch_success,links} = this.props.data;
+        const {mission_name,flight_number,mission_id,launch_year,launch_success,links} = this.props.data;        
         return (            
             <div className="col-xs-12 col-md-6 col-lg-3" style={itemCard}>
                 <div className="item-image" style={itemImage}>
@@ -52,8 +52,8 @@ class DashboardItem extends React.Component{
                     <label style={boldFont}>Launch Year:</label>
                     <span style={fontStyle}> {launch_year} </span><br/>
                     <div style={{height:'10px'}}></div>
-                    <label style={boldFont}>Successful Launch:</label>
-                    <span style={fontStyle}> {launch_success.toString()} </span>                    
+                    <label style={boldFont}>Successful Launch:</label>                    
+                    <span style={fontStyle}> { launch_success !== null? launch_success.toString():''} </span>                    
                 </div>
             </div>            
         )

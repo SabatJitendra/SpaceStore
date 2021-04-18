@@ -21638,7 +21638,7 @@ var DashboardTitle = function (_React$Component) {
                 { className: 'dashboard-title' },
                 _react2.default.createElement(
                     'div',
-                    { style: { fontSize: '20px' } },
+                    { style: { fontSize: '20px', fontWeight: 'bold', paddingBottom: '10px' } },
                     'SpaceX Launch Programs'
                 )
             );
@@ -21697,8 +21697,12 @@ var DashboardContent = function (_React$Component) {
 
         _this.state = {
             items: [],
-            isLoaded: false
+            isLoaded: false,
+            launchYear: null,
+            launchSuccess: null
         };
+        _this.launchYearClickHandler = _this.launchYearClickHandler.bind(_this);
+        _this.successfulLaunchClickHandler = _this.successfulLaunchClickHandler.bind(_this);
         return _this;
     }
 
@@ -21720,6 +21724,48 @@ var DashboardContent = function (_React$Component) {
             });
         }
     }, {
+        key: 'launchYearClickHandler',
+        value: function launchYearClickHandler(text) {
+            var _this3 = this;
+
+            var api = !!this.state.launchSuccess ? 'https://api.spaceXdata.com/v3/launches?limit=100&launch_year=' + text + '&launch_success=' + this.state.launchSuccess : 'https://api.spaceXdata.com/v3/launches?limit=100&launch_year=' + text;
+            console.log(api);
+            fetch(api).then(function (response) {
+                return response.json();
+            }).then(function (json) {
+                console.log(json);
+                _this3.setState({
+                    items: json,
+                    isLoaded: true,
+                    launchYear: text,
+                    launchSuccess: _this3.state.launchSuccess
+                });
+            }, function (err) {
+                console.log(err);
+            });
+        }
+    }, {
+        key: 'successfulLaunchClickHandler',
+        value: function successfulLaunchClickHandler(text) {
+            var _this4 = this;
+
+            var api = !!this.state.launchYear ? 'https://api.spaceXdata.com/v3/launches?limit=100&launch_year=' + this.state.launchYear + '&launch_success=' + text : 'https://api.spaceXdata.com/v3/launches?limit=100&launch_success=' + text;
+            console.log(api);
+            fetch(api).then(function (response) {
+                return response.json();
+            }).then(function (json) {
+                console.log(json);
+                _this4.setState({
+                    items: json,
+                    isLoaded: true,
+                    launchYear: _this4.state.launchYear,
+                    launchSuccess: text
+                });
+            }, function (err) {
+                console.log(err);
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -21728,7 +21774,9 @@ var DashboardContent = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'col-xs-12 col-sm-12 col-lg-3' },
-                    _react2.default.createElement(_DashboardFilter2.default, { items: this.state.items })
+                    _react2.default.createElement(_DashboardFilter2.default, { items: this.state.items,
+                        onSuccessfulLaunchedClicked: this.successfulLaunchClickHandler,
+                        onLaunchYearClicked: this.launchYearClickHandler })
                 ),
                 _react2.default.createElement(
                     'div',
@@ -21833,22 +21881,213 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DashboardFilter = function (_React$Component) {
     _inherits(DashboardFilter, _React$Component);
 
-    function DashboardFilter() {
+    function DashboardFilter(props) {
         _classCallCheck(this, DashboardFilter);
 
-        return _possibleConstructorReturn(this, (DashboardFilter.__proto__ || Object.getPrototypeOf(DashboardFilter)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (DashboardFilter.__proto__ || Object.getPrototypeOf(DashboardFilter)).call(this, props));
+
+        _this.onLaunchYearButtonClick = _this.onLaunchYearButtonClick.bind(_this);
+        _this.onSuccessfulLaunchButtonClick = _this.onSuccessfulLaunchButtonClick.bind(_this);
+        return _this;
     }
 
     _createClass(DashboardFilter, [{
+        key: 'onLaunchYearButtonClick',
+        value: function onLaunchYearButtonClick(event) {
+            this.props.onLaunchYearClicked(event.target.textContent);
+        }
+    }, {
+        key: 'onSuccessfulLaunchButtonClick',
+        value: function onSuccessfulLaunchButtonClick(event) {
+            this.props.onSuccessfulLaunchedClicked(event.target.textContent.toLowerCase());
+        }
+    }, {
         key: 'render',
         value: function render() {
             var dashboardFilter = {
-                minHeight: '800px',
                 backgroundColor: 'white',
                 width: 'auto',
                 borderRadius: '10px'
             };
-            return _react2.default.createElement('div', { className: 'dashboard-filter', style: dashboardFilter });
+            var filterElemetContainer = {
+                display: 'flex',
+                flexDirection: 'column'
+            };
+            var filterContainerRow = {
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'nowrap',
+                justifyContent: 'space-evenly',
+                marginBottom: '10px'
+            };
+            var filterItem = {
+                height: '25px',
+                width: '30%',
+                backgroundColor: '#79e54b',
+                borderRadius: '5px',
+                textAlign: 'center'
+            };
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'row dashboard-filter', style: dashboardFilter },
+                _react2.default.createElement(
+                    'div',
+                    { style: { padding: '10px 5px 5px 10px', fontWeight: 'bold', fontSize: '15px', height: '30px' } },
+                    'Filters'
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'col-xs-12 col-sm-12 col-md-12 col-lg-12' },
+                    _react2.default.createElement(
+                        'div',
+                        { style: { textAlign: 'center' } },
+                        'Launch Year'
+                    ),
+                    _react2.default.createElement('hr', { width: '80%' })
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { style: filterElemetContainer, className: 'col-xs-12 col-sm-12 col-md-12 col-lg-12' },
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2006'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2007'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2008'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2009'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2010'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2011'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2012'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2013'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2014'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2015'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2016'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2017'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2018'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2019'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onLaunchYearButtonClick },
+                            '2020'
+                        ),
+                        _react2.default.createElement('div', { style: { width: '30%' } })
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'col-xs-12 col-sm-12 col-md-12 col-lg-12' },
+                    _react2.default.createElement(
+                        'div',
+                        { style: { textAlign: 'center' } },
+                        'Successful Launch'
+                    ),
+                    _react2.default.createElement('hr', { width: '80%' })
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { style: filterElemetContainer, className: 'col-xs-12 col-sm-12 col-md-12 col-lg-12' },
+                    _react2.default.createElement(
+                        'div',
+                        { style: filterContainerRow },
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onSuccessfulLaunchButtonClick },
+                            'True'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { style: filterItem, onClick: this.onSuccessfulLaunchButtonClick },
+                            'False'
+                        )
+                    )
+                ),
+                _react2.default.createElement('div', { style: { height: '10px' } })
+            );
         }
     }]);
 
@@ -21992,7 +22231,7 @@ var DashboardItem = function (_React$Component) {
                         'span',
                         { style: fontStyle },
                         ' ',
-                        launch_success.toString(),
+                        launch_success !== null ? launch_success.toString() : '',
                         ' '
                     )
                 )
@@ -22057,8 +22296,8 @@ var DashboardItemsContainer = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 { className: 'row dashboard-items-container' },
-                this.props.items.map(function (item) {
-                    return _react2.default.createElement(_DashboardItem2.default, { key: item.flight_number, data: item });
+                this.props.items.map(function (item, index) {
+                    return _react2.default.createElement(_DashboardItem2.default, { key: index, data: item });
                 })
             );
         }

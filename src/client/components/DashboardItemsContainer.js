@@ -11,8 +11,8 @@ class DashboardItemsContainer extends React.Component{
         return (
             <div className="row dashboard-items-container">
             {
-                this.props.items.map((item)=>{
-                    return <DashboardItem key={item.flight_number} data={item}/>;
+                this.props.items.map((item,index)=>{
+                    return <DashboardItem key={index} data={item}/>;
                 })
             }                                
             </div>
