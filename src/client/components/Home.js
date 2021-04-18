@@ -1,10 +1,10 @@
 import React from 'react';
+import SpacexLaunchDashboard from './SpacexLaunchDashboard';
 
 const Home = () => {    
     return(
-        <div>
-            <h1 style={{color:'blue'}}>This is the very very best home component</h1>
-            <button onClick={() => { console.log("Hi there again")}}>Press Me</button>
+        <div className="container">            
+            <SpacexLaunchDashboard/>
         </div>
     );
 }
